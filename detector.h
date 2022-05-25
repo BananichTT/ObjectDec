@@ -8,6 +8,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <QMap>
 #include <QVector>
+#include <QDebug>
 enum state{success, error};
 enum methods{SQDIFF = 0, SQDIFF_NORMED = 1, CCORR = 2, CORR_NORMED = 3, CCOEFF = 4, CCOEFF_NORMED = 5};
 

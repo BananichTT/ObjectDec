@@ -2,8 +2,8 @@
 #include <iostream>
 detector::detector(int a)
 {
-    cv::Mat img = cv::imread("D:/borig.jpg");
-    cv::Mat templ = cv::imread("D:/b2.jpg");
+    cv::Mat img = cv::imread("D:/img.jpg");
+    cv::Mat templ = cv::imread("D:/img1.jpg");
     std::cout<<"dsaghjh";
     add_template(templ);
     input_data(img, methods::CCOEFF_NORMED);
@@ -73,18 +73,24 @@ QVector<cv::Point> tresh(double treshold, const cv::Mat &result) {
   QVector<cv::Point> vec;
 
   cv::Mat_<uchar> result1 = result;
-
+  cv::Mat test(result.size(), CV_8UC1);
   for (int i = 0; i < result1.rows; i++) {
 
     for (int j = 0; j < result1.cols; j++) {
 
-      // qDebug()<<result.at<float>(i,j);
+      //qDebug()<<result.at<float>(i,j);
+      uchar a = static_cast<uchar>((result.at<float>(i,j) * 127) +255);
+      test.at<uchar>(i,j) = a;
       if (result.at<float>(i, j) > treshold) {
 
         vec.push_back(cv::Point(j, i));
       }
     }
   }
+  adaptiveThreshold(test, test, 255, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, 101,
+                    15);
+  cv::imshow("test", test);
+  cv::waitKey(0);
   return vec;
 }
 
@@ -117,6 +123,33 @@ void draw_rect(cv::Mat &qimg, const QVector<QVector<cv::Point>> point_mas){
     }
 };
 
+//void find_conturs(cv::Mat &input_img){
+//    //adaptiveThreshold(input_img, input_img, 255, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, 101,
+//                      //15);
+//    cvtColor(input_img, input_img, cv::COLOR_BGR2GRAY);
+//    cv::Mat canny_output;
+//    cv::Canny(input_img, canny_output, 100, 100*2 );
+//    std::vector<std::vector<cv::Point> > contours;
+//    std::vector<cv::Vec4i> hierarchy;
+//    cv::findContours( canny_output, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE );
+
+//    std::vector<std::vector<cv::Point>> hull(contours.size());
+//    for(unsigned int i = 0,n = contours.size(); i < n; ++i) {
+//        cv::convexHull(cv::Mat(contours[i]),hull[i],false);
+//    }
+
+//    cv::Mat contours_result = cv::Mat::zeros(input_img.size(), CV_8UC3);
+
+//    for (unsigned int i = 0, n = contours.size(); i < n; ++i)
+//    {
+//      cv::Scalar color = cv::Scalar(0,0,255);
+//      cv::drawContours(input_img, contours, i,color, 4, 8, hierarchy,0, cv::Point());
+//    }
+
+// cv::imshow("Contours Result",input_img);
+// cv::waitKey(0);
+//};
+
 void detector::det_img(const cv::Mat &image, methods m)
 {
     QVector<QVector<cv::Point>> point_mas;
@@ -136,6 +169,8 @@ void detector::det_img(const cv::Mat &image, methods m)
 
         cv::Mat res_32f(img.rows - iterator->second.rows + 1, img.cols - iterator->second.cols + 1, CV_8UC1);
         matchTemplate(img, iterator->second, res_32f, match_method);
+
+
 
         //find_conturs(res_32f);
         QVector<cv::Point> q = tresh(0.4, res_32f);
