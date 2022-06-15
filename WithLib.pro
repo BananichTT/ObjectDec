@@ -1,4 +1,4 @@
-QT       += core gui testlib
+QT       += core gui testlib sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -42,3 +42,9 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../DetectorLib/build
 
 INCLUDEPATH += $$PWD/../../DetectorLib/DetectorLib
 DEPENDPATH += $$PWD/../../DetectorLib/DetectorLib
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../build-LibDB-Desktop_Qt_6_2_4_MinGW_64_bit-Release/release/ -lLibDB
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../build-LibDB-Desktop_Qt_6_2_4_MinGW_64_bit-Release/debug/ -lLibDB
+
+INCLUDEPATH += $$PWD/../../LibDB
+DEPENDPATH += $$PWD/../../LibDB

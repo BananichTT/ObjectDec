@@ -10,6 +10,6 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    QTest::qExec(new test, argc, argv);
+    //QTest::qExec(new test, argc, argv);
     return a.exec();
 }
