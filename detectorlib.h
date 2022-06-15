@@ -11,14 +11,16 @@
 #include <QVector>
 #include <QDebug>
 #include <fstream>
+#include <sys/time.h>
 
 enum state{success, error};
 enum methods{SQDIFF = 0, SQDIFF_NORMED = 1, CCORR = 2, CORR_NORMED = 3, CCOEFF = 4, CCOEFF_NORMED = 5};
 enum frame_state {next,previos};
 
 struct object_inf {
-    cv::Mat image;
-    std::vector<cv::Point> point; // точки в которых содержится объект
+    QVector<cv::Point> point; // координаты объекта
+    std::string type;
+    timeval time;
     cv::Mat templateMatching_result;
 };
 
@@ -59,6 +61,7 @@ private:
 
 signals:
   void output_data(object_inf info);
+  void Image(cv::Mat pix);
 };
 
 #endif // DETECTORLIB_H

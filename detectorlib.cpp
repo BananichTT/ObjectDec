@@ -145,7 +145,7 @@ cv::Mat convert_to_CV_8UC1(const cv::Mat &result) {
       test.at<uchar>(i, j) = a;
     }
   }
-  cv::imshow("res", test);
+//  cv::imshow("res", test);
   return test;
 };
 
@@ -210,7 +210,7 @@ int DetectorLib::det_img(const cv::Mat &image, methods m)
     cv::Mat res_32f(img.rows - iterator->second.rows + 1,
                     img.cols - iterator->second.cols + 1, 0);
     matchTemplate(img, iterator->second, res_32f, match_method);
-    cv::imshow("do conv", res_32f);
+//    cv::imshow("do conv", res_32f);
     cv::Mat convert = convert_to_CV_8UC1(res_32f);
     points = find_conturs(convert);
     delete_rect(points);
@@ -218,7 +218,19 @@ int DetectorLib::det_img(const cv::Mat &image, methods m)
   }
   draw_rect(img, point_mas);
 
-  cv::imshow("IMAGE", img);
+//  cv::imshow("IMAGE", img);
+  object_inf info;
+  info.point = points;
+  info.type = "bird";
+  gettimeofday(&info.time, 0);
+  info.templateMatching_result = img;
+  cv::cvtColor(info.templateMatching_result, info.templateMatching_result, cv::COLOR_GRAY2BGR);
+
+//  cv::imshow("info", info.templateMatching_result);
+//  cv::waitKey(0);
+//  emit output_data(info);
+
+  emit Image(img);
   return points.length();
 }
 
